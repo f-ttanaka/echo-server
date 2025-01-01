@@ -6,10 +6,10 @@ import qualified Data.Text as T
 import Network.Socket
 import System.IO (hClose, hGetLine, hPutStr)
 
-runClient :: IO ()
-runClient = do
+runClient :: PortNumber -> IO ()
+runClient pn = do
   hSetBuffering stdout NoBuffering
-  addr <- getAddrInfo1
+  addr <- getAddrInfo1 pn
   bracket (openSocket addr) close $ \soc -> do
     connect soc (addrAddress addr)
     putStrLn "Connected to the echo server."

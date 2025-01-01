@@ -6,9 +6,9 @@ import Control.Exception.Safe
 import Network.Socket
 import System.IO (hClose, hGetLine, hPutStr)
 
-runServer :: IO ()
-runServer = do
-  addr <- getAddrInfo1
+runServer :: PortNumber -> IO ()
+runServer pn = do
+  addr <- getAddrInfo1 pn
   socketComm addr processClient
 
 -- socket communication

@@ -8,8 +8,8 @@ import Control.Exception.Safe
 import Network.Socket
 import Relude
 
-getAddrInfo1 :: IO AddrInfo
-getAddrInfo1 = do
+getAddrInfo1 :: PortNumber -> IO AddrInfo
+getAddrInfo1 pn = do
   -- IPv4, TCP
   let aiHints =
         defaultHints
@@ -17,7 +17,7 @@ getAddrInfo1 = do
             addrSocketType = Stream,
             addrFamily = AF_INET
           }
-  addrInfos <- getAddrInfo (Just aiHints) Nothing (Just "8080")
+  addrInfos <- getAddrInfo (Just aiHints) Nothing (Just $ show pn)
   case viaNonEmpty head addrInfos of
     Nothing -> throwString "No address info"
     Just addr -> return addr
