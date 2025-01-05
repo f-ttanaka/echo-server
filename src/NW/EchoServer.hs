@@ -1,14 +1,14 @@
-module EchoServer (runServer) where
+module NW.EchoServer (runTCPServer) where
 
 import Common
 import Control.Concurrent
-import Control.Exception.Safe
+import NW.Internal
 import Network.Socket
 import System.IO (hClose, hGetLine, hPutStr)
 
-runServer :: PortNumber -> IO ()
-runServer pn = do
-  addr <- getAddrInfo1 pn
+runTCPServer :: PortNumber -> IO ()
+runTCPServer pn = do
+  addr <- getAddrInfo1 pn TCP
   socketComm addr processClient
 
 -- socket communication

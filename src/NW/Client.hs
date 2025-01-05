@@ -1,15 +1,19 @@
-module Client where
+module NW.Client (runTCPClient, runUDPClient) where
 
 import Common
-import Control.Exception.Safe
 import qualified Data.Text as T
+import NW.Internal
 import Network.Socket
 import System.IO (hClose, hGetLine, hPutStr)
 
-runClient :: PortNumber -> IO ()
-runClient pn = do
+runTCPClient, runUDPClient :: PortNumber -> IO ()
+runTCPClient pn = runClient pn TCP
+runUDPClient pn = runClient pn UDP
+
+runClient :: PortNumber -> CommType -> IO ()
+runClient pn ct = do
   hSetBuffering stdout NoBuffering
-  addr <- getAddrInfo1 pn
+  addr <- getAddrInfo1 pn ct
   bracket (openSocket addr) close $ \soc -> do
     connect soc (addrAddress addr)
     putStrLn "Connected to the echo server."

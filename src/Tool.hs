@@ -1,9 +1,9 @@
 module Tool where
 
-import Client
 import Common
-import Control.Exception.Safe
-import EchoServer
+import NW.Client
+import NW.EchoServer
+import NW.UDPServer
 import Network.Socket (PortNumber)
 
 defaultRole :: String
@@ -21,9 +21,13 @@ runTool :: IO ()
 runTool = do
   args <- getArgs
   case args of
-    [] -> runServer defaultPortNumber
-    ["server"] -> runServer defaultPortNumber
-    ["client"] -> runClient defaultPortNumber
-    "server" : pn : _ -> runServer =<< readIO pn
-    "client" : pn : _ -> runClient =<< readIO pn
+    [] -> runTCPServer defaultPortNumber
+    ["server"] -> runTCPServer defaultPortNumber
+    ["client"] -> runTCPClient defaultPortNumber
+    "server" : pn : "tcp" : _ -> runTCPServer =<< readIO pn
+    "client" : pn : "tcp" : _ -> runTCPClient =<< readIO pn
+    "server" : pn : "udp" : _ -> runUDPServer =<< readIO pn
+    "client" : pn : "udp" : _ -> runUDPClient =<< readIO pn
+    "server" : pn : _ -> runTCPServer =<< readIO pn
+    "client" : pn : _ -> runTCPClient =<< readIO pn
     _ -> throwString "invalid argument."
